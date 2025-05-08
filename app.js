@@ -5,10 +5,12 @@ const port=8080;
 const MONGO_URL="mongodb://127.0.0.1/wanderlust";
 const Listing=require("./models/listing.js");
 const path=require("path");
+let methodOverride = require('method-override')
 app.set("view engine","ejs");
 app.set("views",path.join(__dirname,"views"));
 app.set("views",path.join(__dirname,"views/listings"));
 app.use(express.urlencoded({extended:true}));
+app.use(methodOverride("_method"));
 app.listen(port,()=>{
     console.log(`server is listening through ${port}`);
 })
@@ -49,8 +51,8 @@ app.get("/listings/new",(req,res)=>{
 //Show Route
 app.get("/listings/:id",async(req,res)=>{
     let {id}=req.params;
-    const detail= await Listing.findById(id);
-    res.render("show.ejs",{detail});
+    const listing= await Listing.findById(id);
+    res.render("show.ejs",{listing});
 })
 
 //Create Route
@@ -59,6 +61,28 @@ app.post("/listings", async(req,res)=>{
     await newListing.save();
     res.redirect("/listings")
 });
+
+//Edit Route
+app.get("/listings/:id/edit", async(req,res)=>{
+    let {id}=req.params;
+    const listing= await Listing.findById(id);
+    res.render("edit.ejs",{listing});
+})
+
+//Update Route
+app.put("/listings/:id",async(req,res)=>{
+    let {id}=req.params;
+    await Listing.findByIdAndUpdate(id,{ ...req.body.listing});
+    res.redirect("/listings");
+})
+
+//Delete Route
+app.delete("/listings/:id",async(req,res)=>{
+    let {id}=req.params;
+    const deletedListing=await Listing.findByIdAndDelete(id);
+    console.log(deletedListing);
+    res.redirect("/listings");
+})
 
 app.get("/",(req,res)=>{
     res.send("Hi, I am root");

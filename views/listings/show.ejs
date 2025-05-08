@@ -8,11 +8,16 @@
 <body>
     <h3>Location Details:</h3>
     <ul>
-        <li><%=detail.title%></li>
-        <li><%=detail.description%></li>
-        <li>&#8377;<%=detail.price.toLocaleString("en-IN")%></li>
-        <li><%=detail.location%></li>
-        <li><%=detail.country%></li>
+        <li><%=listing.title%></li>
+        <li><%=listing.description%></li>
+        <li>&#8377;<%=listing.price.toLocaleString("en-IN")%></li>
+        <li><%=listing.location%></li>
+        <li><%=listing.country%></li>
     </ul>
+    <a href="/listings/<%=listing._id%>/edit">Edit Listing</a>
+    <br><br>
+    <form method="post" action="/listings/<%=listing._id%>?_method=DELETE">
+        <button>Delete this Listing</button>
+    </form>
 </body>
 </html>
